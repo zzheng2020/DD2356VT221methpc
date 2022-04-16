@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CMakeRunConfigurationManager" shouldGenerate="true" shouldDeleteObsolete="true">
+    <generated>
+      <config projectName="CPP" targetName="CPP" />
+    </generated>
+  </component>
+  <component name="CMakeSettings" AUTO_RELOAD="true">
+    <configurations>
+      <configuration PROFILE_NAME="Debug" CONFIG_NAME="Debug" />
+    </configurations>
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="7f55b054-f463-40ed-aa6c-20c9791ad793" name="Default Changelist" comment="" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ClangdSettings">
+    <option name="formatViaClangd" value="false" />
+  </component>
+  <component name="ExecutionTargetManager" SELECTED_TARGET="CMakeBuildProfile:Debug" />
+  <component name="ProjectId" id="27CTDAFVOOXO0VfVQeU7c8FGQJw" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showExcludedFiles" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="settings.editor.selected.configurable" value="editor.preferences.fonts.default" />
+  </component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/assignment 1" />
+    </key>
+  </component>
+  <component name="RunManager">
+    <configuration name="CPP" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="CPP" TARGET_NAME="CPP" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="CPP" RUN_TARGET_NAME="CPP">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+  </component>
+  <component name="ServiceViewManager">
+    <option name="viewStates">
+      <list>
+        <serviceView>
+          <treeState>
+            <expand />
+            <select />
+          </treeState>
+        </serviceView>
+      </list>
+    </option>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="7f55b054-f463-40ed-aa6c-20c9791ad793" name="Default Changelist" comment="" />
+      <created>1648822945838</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1648822945838</updated>
+      <workItem from="1648822950470" duration="183000" />
+      <workItem from="1648823170113" duration="1685000" />
+      <workItem from="1648829427242" duration="7000" />
+      <workItem from="1648854402165" duration="216000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="1" />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="-1215" y="875" key="SettingsEditor" timestamp="1648823977061">
+      <screen x="-1680" y="727" width="1680" height="1025" />
+    </state>
+    <state x="-1215" y="875" key="SettingsEditor/-1680.727.1680.1025/0.25.2560.1415@-1680.727.1680.1025" timestamp="1648823977061" />
+    <state x="788" y="496" key="com.intellij.ide.util.TipDialog" timestamp="1648854402985">
+      <screen x="0" y="25" width="2560" height="1415" />
+    </state>
+    <state x="-1163" y="1068" key="com.intellij.ide.util.TipDialog/-1680.727.1680.1025/0.25.2560.1415@-1680.727.1680.1025" timestamp="1648823246858" />
+    <state x="788" y="496" key="com.intellij.ide.util.TipDialog/-1680.727.1680.1025/0.25.2560.1415@0.25.2560.1415" timestamp="1648854402985" />
+  </component>
+</project>
