@@ -1,121 +1,63 @@
+#include <iostream>
 #include <stdio.h>
-#include <stdlib.h>
-#include <sys/time.h>
+#include <vector>
+#include <math.h>
+#include <algorithm>
 
-double mysecond()
-{
-    struct timeval tp;
-    struct timezone tzp;
-    int i;
+using namespace std;
 
-    i = gettimeofday(&tp, &tzp);
-    return ((double)tp.tv_sec + (double)tp.tv_usec * 1.e-6);
-}
+// double x[][5] = {
+//     {7072.8, 7087.8, 6963.2, 6739.1, 8304.8},
+//     {13359.0, 13903.4, 13814.7, 13839.7, 11647.4},
+//     {17282.3, 24752.5, 22124.0, 20470.6, 15531.2},
+//     {25554.6, 22640.6, 25534.3, 22698.0, 21482.4},
+//     {20207.4, 23330.0, 20240.3, 20270.9, 20539.5},
+//     {21022.1, 21531.3, 20578.6, 21516.8, 21228.2},
+//     {24503.0, 24676.0, 24573.9, 24585.6, 26320.3},
+//     {27957.4, 28683.9, 28199.4, 28818.2, 28084.9},
+//     {31086.2, 30863.2, 30372.9, 30686.8, 31576.2},
+//     {33312.9, 32713.7, 32408.8, 32271.6, 32134.1}
+// };
 
-/*
- * Example of sparse matrix-vector multiply, using CSR (compressed sparse
- * row format).
- *
- */
-int main(int argc, char *argv[])
-{
-    int *ia, *ja;
-    double *a, *x, *y;
-    int row, i, j, idx, n, nnzMax, nnz, nrows;
-    double ts, t, rate;
+double x[][3] = {
+    {222805.0, 213314.9, 213654.5}, // static
+    {62.9, 62.3, 62.9},
+    {33312.9, 32713.7, 32408.8}
+};
 
-    n = 10;
-    if (argc > 1)
-        n = atoi(argv[1]);
+vector<double> avg[10], std_dev[10];
 
-    /* Warning: if n > sqrt(2^31), you may get integer overflow */
+int main() {
+    for (int i = 0; i < 3; i++) {
+        for (int j = 0; j < 3; j++) {
+            cout << x[i][j] << " ";
+        }
+        cout << "\n";
+    }
 
-    /* Allocate enough storage for the matix.  We allocate more than
-       is needed in order to simplify the code */
+    cout << "\n";
 
-    nrows = n * n;
-    nnzMax = nrows * 5;
-    ia = (int *)malloc(nrows * sizeof(int));
-    ja = (int *)malloc(nnzMax * sizeof(int));
-    a = (double *)malloc(nnzMax * sizeof(double));
-    /* Allocate the source and result vectors */
-    x = (double *)malloc(nrows * sizeof(double));
-    y = (double *)malloc(nrows * sizeof(double));
+    for (int i = 0; i < 3; i++) {
+        double sum = 0;
+        for (int j = 0; j < 3; j++) {
+            sum += x[i][j];
+        }
+        avg[i].push_back(sum / 3.0);
+        
+        double tmp_avg = sum / 3.0;
+        double dif = 0;
+        for (int j = 0; j < 3; j++) {
+            dif += sqrt( ( (x[i][j] - tmp_avg) * (x[i][j] - tmp_avg) ) / 5.0);
+        }
+        std_dev[i].push_back(dif);
+    }
 
-    /* Create a pentadiagonal matrix, representing very roughly a finite
-       difference approximation to the Laplacian on a square n x n mesh */
-    row = 0;
-    nnz = 0;
-    for (i = 0; i < n; i++)
-    {
-        for (j = 0; j < n; j++)
-        {
-            ia[row] = nnz;
-            if (i > 0)
-            {
-                ja[nnz] = row - n;
-                a[nnz] = -1.0;
-                nnz++;
-            }
-            if (j > 0)
-            {
-                ja[nnz] = row - 1;
-                a[nnz] = -1.0;
-                nnz++;
-            }
-            ja[nnz] = row;
-            a[nnz] = 4.0;
-            nnz++;
-            if (j < n - 1)
-            {
-                ja[nnz] = row + 1;
-                a[nnz] = -1.0;
-                nnz++;
-            }
-            if (i < n - 1)
-            {
-                ja[nnz] = row + n;
-                a[nnz] = -1.0;
-                nnz++;
-            }
-            row++;
+    for (int i = 0; i < 3; i++) {
+        for (int j = 0; j < avg[i].size(); j++) {
+            cout << "avg == " << avg[i][j] << ", std_dev == " << std_dev[i][j] << "\n";
         }
     }
-    ia[row] = nnz;
 
-    /* Create the source (x) vector */
-    for (i = 0; i < nrows; i++)
-        x[i] = 1.0;
 
-    /* Perform a matrix-vector multiply: y = A*x */
-    /* Warning: To use this for timing, you need to (a) handle cold start
-       (b) perform enough tests to make timing quantum relatively small */
-    ts = mysecond();
-    for (row = 0; row < nrows; row++)
-    {
-        double sum = 0.0;
-        for (idx = ia[row]; idx < ia[row + 1]; idx++)
-        {
-            sum += a[idx] * x[ja[idx]];
-        }
-        y[row] = sum;
-    }
-    t = mysecond() - ts;
-    /* Compute with the result to keep the compiler for marking the
-       code as dead */
-    for (row = 0; row < nrows; row++)
-    {
-        if (y[row] < 0)
-        {
-            fprintf(stderr, "y[%d]=%f, fails consistency test\n", row, y[row]);
-        }
-    }
-    printf("Time for Sparse Ax, nrows=%d, nnz=%d, T = %f\n", nrows, nnz, t);
-
-    free(ia);
-    free(ja);
-    free(a);
-    free(x);
-    free(y);
     return 0;
 }
