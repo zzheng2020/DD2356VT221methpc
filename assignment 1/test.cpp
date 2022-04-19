@@ -47,9 +47,9 @@ int main() {
         double tmp_avg = sum / 3.0;
         double dif = 0;
         for (int j = 0; j < 3; j++) {
-            dif += sqrt( ( (x[i][j] - tmp_avg) * (x[i][j] - tmp_avg) ) / 5.0);
+            dif += (x[i][j] - tmp_avg) * (x[i][j] - tmp_avg);
         }
-        std_dev[i].push_back(dif);
+        std_dev[i].push_back(sqrt( dif / 3.0 ));
     }
 
     for (int i = 0; i < 3; i++) {
