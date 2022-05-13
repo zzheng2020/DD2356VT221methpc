@@ -55,13 +55,13 @@ int main(int argc, char *argv[])
 		for(int i=1; i<=5; i++){
 			if(rank == 0){
 				MPI_Win_fence(0, win);
-                MPI_Get(recv, N, MPI_DOUBLE, 1, 0, N, MPI_DOUBLE, win);
-                MPI_Win_fence(0, win);
+				MPI_Get(recv, N, MPI_DOUBLE, 1, 0, N, MPI_DOUBLE, win);
+				MPI_Win_fence(0, win);
 			}
 			else if(rank == 1){
 				MPI_Win_fence(0, win);
-                MPI_Get(recv, N, MPI_DOUBLE, 0, 0, N, MPI_DOUBLE, win);
-                MPI_Win_fence(0, win);
+				MPI_Get(recv, N, MPI_DOUBLE, 0, 0, N, MPI_DOUBLE, win);
+				MPI_Win_fence(0, win);
 			}
 		}
 
@@ -95,7 +95,7 @@ int main(int argc, char *argv[])
 		free(A);
 		free(recv);
 	}
-
+	MPI_Win_free(&win);
 	MPI_Finalize();
 	return 0;
 }
