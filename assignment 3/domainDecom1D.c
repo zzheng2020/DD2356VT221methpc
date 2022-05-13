@@ -35,6 +35,8 @@ int main(int argc, char *argv[]){
     // communicate ghost cells
     // ...
     // ...
+    //becasue of the system buffer is larger than the message we want to send, so we don't need
+    //to consider the "dead lock" situation !!!
     //tag 0: send left receive right
     //tag 1: send right receive left
     //first stage - send left cell
