@@ -1,6 +1,11 @@
 //reference: 
 //1. https://github.com/Ionitedev/DD2356-A3/blob/master/fox.c
 //2. https://stackoverflow.com/questions/5104847/mpi-bcast-a-dynamic-2d-array
+//注意: KTH Dardel环境下 MPI_Cart_create()函数会失效！创建不了新的comm，用MPI的拓扑API还不如自己脑补拓扑
+//Note: Under KTH Dardel enviroment, MPI_Cart_create() can not create new comm
+//This code have two version, the version 1 implemented by calling MPI_Cart_create() and MPI_Cart_sub,
+//but it can not run on the KTH Dardel. Version two implemented by calling MPI_Comm_split(), and reduced 
+//dependence on communicators to get rank, so it can run on the Dardel. But I think version 1 is more elegant!!
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -11,7 +16,7 @@
 #include <mpi.h>
 #include <stdbool.h>
 
-#define matrix_size 4
+#define matrix_size 24
 
 void matmul(double **temp_A, double **sub_B, double **sub_C, int tile_size){
     for (int i = 0; i < tile_size; i++)
@@ -381,14 +386,14 @@ int main(int argc, char* argv[])
         printf("Execution Time: %f\n", elapsed_time);
 
         //test
-        for (int i = 0; i < matrix_size; i++)
-        {
-            for (int j = 0; j < matrix_size; j++)
-            {
-                printf("X:%d Y:%d Value:%f\n",i,j,C[i][j]);
-            }
-        }
-        //free(C);
+        // for (int i = 0; i < matrix_size; i++)
+        // {
+        //     for (int j = 0; j < matrix_size; j++)
+        //     {
+        //         printf("X:%d Y:%d Value:%f\n",i,j,C[i][j]);
+        //     }
+        // }
+        free(C);
     }else{
         double * tile_buffer = (double *)malloc(tile_size * tile_size * sizeof(double));
         // if(rank == 1){
