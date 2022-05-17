@@ -7,6 +7,8 @@
 //but it can not run on the KTH Dardel. Version two implemented by calling MPI_Comm_split(), and reduced 
 //dependence on communicators to get rank, so it can run on the Dardel. But I think version 1 is more elegant!!
 
+//Test 4,9,16,25 MPI processes under matrix_size 120 succesfully! Test 36 will throw some error, but I do not know why!
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
@@ -16,7 +18,7 @@
 #include <mpi.h>
 #include <stdbool.h>
 
-#define matrix_size 24
+#define matrix_size 120
 
 void matmul(double **temp_A, double **sub_B, double **sub_C, int tile_size){
     for (int i = 0; i < tile_size; i++)
@@ -119,8 +121,15 @@ int main(int argc, char* argv[])
 
     //assume the number of processes must be a square
     //number of process per row/col
+    
     int grid_size = sqrt(num_ranks);
-
+    //sub_matrix size
+    int tile_size = matrix_size / grid_size;
+    if(rank == 0){
+        printf("num_ranks: %d\n",num_ranks);
+        printf("grid_size: %d\n",grid_size);
+        printf("tile_size: %d\n",tile_size);
+    }
     // // int dim_size[2] = {grid_size, grid_size};
     // // int period[2] = {1, 1};
 
@@ -182,8 +191,7 @@ int main(int argc, char* argv[])
     // //update rank if we set reorder as 1?
     // //MPI_Comm_rank(comm_cart, &rank);
 
-    // //sub_matrix size
-    int tile_size = matrix_size / grid_size;
+    
     double ** sub_A = (double **)malloc(tile_size * sizeof(double*));
     malloc_square(sub_A, tile_size);
     double ** sub_B = (double **)malloc(tile_size * sizeof(double*));
