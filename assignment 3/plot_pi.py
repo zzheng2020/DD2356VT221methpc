@@ -19,12 +19,12 @@ time1 =[
     ]
 
 
-plt.plot(number1, time1, '-*')
-plt.xlabel('number of processes')
-plt.ylabel('execution time(s)')
-plt.legend(loc=4) 
-plt.title('Strong Scaling Test-Linear Reduction Algorithm')
-plt.show()
+# plt.plot(number1, time1, '-*')
+# plt.xlabel('number of processes')
+# plt.ylabel('execution time(s)')
+# plt.legend(loc=4) 
+# plt.title('Strong Scaling Test-Linear Reduction Algorithm')
+# plt.show()
 
 #4.2
 number2 = [
@@ -44,12 +44,12 @@ time2 =[
     ]
 
 
-plt.plot(number2, time2, '-*')
-plt.xlabel('number of processes')
-plt.ylabel('execution time(s)')
-plt.legend(loc=4) 
-plt.title('Strong Scaling Test-Binary Tree Reduction')
-plt.show()
+# plt.plot(number2, time2, '-*')
+# plt.xlabel('number of processes')
+# plt.ylabel('execution time(s)')
+# plt.legend(loc=4) 
+# plt.title('Strong Scaling Test-Binary Tree Reduction')
+# plt.show()
 
 #4.3
 number3 = [
@@ -68,12 +68,12 @@ time3 =[
     0.215
     ]
 
-plt.plot(number3, time3, '-*')
-plt.xlabel('number of processes')
-plt.ylabel('execution time(s)')
-plt.legend(loc=4) 
-plt.title('Strong Scaling Test-Non-Blocking Linear Reduction Algorithm')
-plt.show()
+# plt.plot(number3, time3, '-*')
+# plt.xlabel('number of processes')
+# plt.ylabel('execution time(s)')
+# plt.legend(loc=4) 
+# plt.title('Strong Scaling Test-Non-Blocking Linear Reduction Algorithm')
+# plt.show()
 
 
 #4.4
@@ -93,9 +93,32 @@ time4 =[
     0.310
     ]
 
-plt.plot(number4, time4, '-*')
+# plt.plot(number4, time4, '-*')
+# plt.xlabel('number of processes')
+# plt.ylabel('execution time(s)')
+# plt.legend(loc=4) 
+# plt.title('Strong Scaling Test-MPI_Reduce')
+# plt.show()
+
+
+#bonus
+number5 =[
+    9,
+    16,
+    25,
+    64,
+    100]
+time5 =[
+    0.929280,
+    0.634950,
+    0.426979,
+    0.184074,
+    0.089162
+    ]
+
+plt.plot(number5, time5, '-*')
 plt.xlabel('number of processes')
 plt.ylabel('execution time(s)')
 plt.legend(loc=4) 
-plt.title('Strong Scaling Test-MPI_Reduce')
+plt.title('Fox 1200x1200 Measure')
 plt.show()

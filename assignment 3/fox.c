@@ -7,7 +7,7 @@
 //but it can not run on the KTH Dardel. Version two implemented by calling MPI_Comm_split(), and reduced 
 //dependence on communicators to get rank, so it can run on the Dardel. But I think version 1 is more elegant!!
 
-//Test 4,9,16,25 MPI processes under matrix_size 120 succesfully! Test 36 will throw some error, but I do not know why!
+//Test 4,9,16,25,64,100 MPI processes under matrix_size 120 succesfully!
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -18,7 +18,7 @@
 #include <mpi.h>
 #include <stdbool.h>
 
-#define matrix_size 120
+#define matrix_size 1200
 
 void matmul(double **temp_A, double **sub_B, double **sub_C, int tile_size){
     for (int i = 0; i < tile_size; i++)
@@ -79,6 +79,7 @@ void get_tile(double** tile, int tile_size, double** matrix, int start_x, int st
     {
         for (int x = 0; x < tile_size; x++)
         {
+            //strcpy(tile[y][x],matrix[y + start_y][x + start_x]);
             tile[y][x] = matrix[y + start_y][x + start_x];
         }   
     }
@@ -148,20 +149,20 @@ int main(int argc, char* argv[])
     int key   = colorkey.rem;
     MPI_Comm_split(MPI_COMM_WORLD, color, key, &comm_row);
 
-    // //version 1
-    // //MPI_Cart_create(MPI_COMM_WORLD, 2, dim_size, period, 1, &comm_cart);
-    // //{1, 0} remain X, {0, 1} remain Y.
-    // // MPI dimension is reversed
-    // //拓扑逻辑上每col的第几个
-    // // p0 p0 p0
-    // // p1 p1 p1
-    // // p2 p2 p2
+    // // //version 1
+    // // //MPI_Cart_create(MPI_COMM_WORLD, 2, dim_size, period, 1, &comm_cart);
+    // // //{1, 0} remain X, {0, 1} remain Y.
+    // // // MPI dimension is reversed
+    // // //拓扑逻辑上每col的第几个
+    // // // p0 p0 p0
+    // // // p1 p1 p1
+    // // // p2 p2 p2
 
-    // // Why can not sub twice?
-    // // int remain_col[2] = {1, 0};
-    // // MPI_Cart_sub(comm_cart, remain_col, &comm_col); //col comm
+    // // // Why can not sub twice?
+    // // // int remain_col[2] = {1, 0};
+    // // // MPI_Cart_sub(comm_cart, remain_col, &comm_col); //col comm
 
-    // //version 2
+    // // //version 2
     int above, below;
     if (rank < grid_size)
     {
@@ -170,26 +171,26 @@ int main(int argc, char* argv[])
         above = (rank - grid_size) % num_ranks;
     }
     below = (rank + grid_size) % num_ranks;
-    // if(rank == 3){
-    //     printf("my rank: %d\n", rank);
-    //     printf("my above: %d\n", above);
-    //     printf("my below: %d\n", below);
-    // }
-    // // MPI_Cart_shift(comm_col, 0, 1, &above, &below);
+    // // if(rank == 3){
+    // //     printf("my rank: %d\n", rank);
+    // //     printf("my above: %d\n", above);
+    // //     printf("my below: %d\n", below);
+    // // }
+    // // // MPI_Cart_shift(comm_col, 0, 1, &above, &below);
     
-    // //拓扑逻辑上每row的第几个
-    // // p0 p1 p2
-    // // p0 p1 p2
-    // // p0 p1 p2
-    // //int remain_row[2] = {0, 1};
-    // //MPI_Cart_sub(comm_cart, remain_row, &comm_row); //row comm
-    // //every process has a sub_rank in row and col
-    // //int sub_rank_col;
-    // //int sub_rank_row;
-    // //MPI_Comm_rank(comm_col, &sub_rank_col);
-    // //MPI_Comm_rank(comm_row, &sub_rank_row);
-    // //update rank if we set reorder as 1?
-    // //MPI_Comm_rank(comm_cart, &rank);
+    // // //拓扑逻辑上每row的第几个
+    // // // p0 p1 p2
+    // // // p0 p1 p2
+    // // // p0 p1 p2
+    // // //int remain_row[2] = {0, 1};
+    // // //MPI_Cart_sub(comm_cart, remain_row, &comm_row); //row comm
+    // // //every process has a sub_rank in row and col
+    // // //int sub_rank_col;
+    // // //int sub_rank_row;
+    // // //MPI_Comm_rank(comm_col, &sub_rank_col);
+    // // //MPI_Comm_rank(comm_row, &sub_rank_row);
+    // // //update rank if we set reorder as 1?
+    // // //MPI_Comm_rank(comm_cart, &rank);
 
     
     double ** sub_A = (double **)malloc(tile_size * sizeof(double*));
@@ -243,13 +244,13 @@ int main(int argc, char* argv[])
 
     double ** sub_C = (double **)malloc(tile_size * sizeof(double*));
     malloc_square(sub_C, tile_size);
-    //init to zero at first
+    // //init to zero at first
     init_matrix(sub_C, tile_size,0);
 
-    // //use this buffer to receive the bcast sub_matrix
+    // // //use this buffer to receive the bcast sub_matrix
     double * continuous_buffer = (double *)malloc(tile_size * tile_size * sizeof(double));
 
-    // //store the temp sub_A matrix in every iteration received from Bcast
+    // // //store the temp sub_A matrix in every iteration received from Bcast
     double ** temp_A = (double **)malloc(tile_size * sizeof(double*));
     malloc_square(temp_A, tile_size);
 
@@ -344,10 +345,6 @@ int main(int argc, char* argv[])
 
     }
 
-    free(sub_A);
-    free(sub_B);
-    free(temp_A);
-    free(continuous_buffer);
     if(rank == 0){
         // printf("my rank: %d\n", rank);
         // for (int i = 0; i < tile_size; i++)
@@ -367,9 +364,12 @@ int main(int argc, char* argv[])
         //         printf("%f ",C[i][j]);
         //     }
         // }
+        
         double ** tile_buffer = (double **)malloc(num_ranks * sizeof(double*));
-        malloc_square(tile_buffer, tile_size * tile_size);
-        //double * tile_buffer = (double *)malloc(tile_size * tile_size * sizeof(double));
+        for (int i = 0; i < num_ranks; i++)
+        {
+            tile_buffer[i] = (double *)malloc(tile_size * tile_size * sizeof(double));
+        }
         for (int i = 1; i < num_ranks; i++)
         {
             MPI_Recv(tile_buffer[i], tile_size * tile_size, MPI_DOUBLE, i, 666, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
@@ -393,7 +393,6 @@ int main(int argc, char* argv[])
         elapsed_time = stop_time - start_time;
         printf("Execution Time: %f\n", elapsed_time);
 
-        //test
         // for (int i = 0; i < matrix_size; i++)
         // {
         //     for (int j = 0; j < matrix_size; j++)
@@ -401,9 +400,8 @@ int main(int argc, char* argv[])
         //         printf("X:%d Y:%d Value:%f\n",i,j,C[i][j]);
         //     }
         // }
-        free(C);
     }else{
-        double * tile_buffer = (double *)malloc(tile_size * tile_size * sizeof(double));
+        double * single_tile_buffer = (double *)malloc(tile_size * tile_size * sizeof(double));
         // if(rank == 1){
         //     for (int j = 0; j < tile_size * tile_size; j++)
         //     {
@@ -411,16 +409,21 @@ int main(int argc, char* argv[])
         //     }
         //     printf("\n");
         // }
-        matrix2cont(tile_buffer, sub_C, tile_size);
+        matrix2cont(single_tile_buffer, sub_C, tile_size);
         // if(rank == 1){
         //     for (int j = 0; j < tile_size * tile_size; j++)
         //     {
         //         printf("%f ",tile_buffer[j]);
         //     }
         // }
-        MPI_Send(tile_buffer, tile_size * tile_size, MPI_DOUBLE, 0, 666, MPI_COMM_WORLD);
+        MPI_Send(single_tile_buffer, tile_size * tile_size, MPI_DOUBLE, 0, 666, MPI_COMM_WORLD);
     }
-    //free(sub_C);
+    free(sub_C);
+    free(sub_A);
+    free(sub_B);
+    free(temp_A);
+    free(continuous_buffer);
+    free(C);
     //MPI_Comm_free(&comm_row);
     //MPI_Comm_free(&comm_col);
     MPI_Finalize();
